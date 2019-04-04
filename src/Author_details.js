@@ -86,6 +86,7 @@ render() {
       })
   return (
     <div>
+    <h2 className="text">Other Articles</h2>
       <ul>{links}</ul>
     </div>
   );

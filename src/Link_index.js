@@ -69,7 +69,7 @@ async componentDidMount() {
   const result2 = await axios.get(api2);
   const result3 = await axios.get(api3);
   const result4 = await axios.get(api4);
-  console.log("Result", result1.data)
+  
   let dom = new DOMParser().parseFromString(result1.data, "text/xml");
   let json = this.xmlToJson(dom)
   allResults.push(json)

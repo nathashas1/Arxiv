@@ -35,4 +35,17 @@
 .linkitem{
   display: flex;
   flex-direction: column;
+  text-decoration: none;
+  padding: 5px;
+}
+
+.summary{
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  padding-left: 10px;
+}
+
+.text{
+  padding-left: 40px;
 }

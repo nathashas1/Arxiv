@@ -3,12 +3,19 @@ import { Link } from 'react-router-dom';
 
 
 const AuthorIndexItem = ({authorName}) => {
-  console.log("in author index")
+  console.log("in author index item",authorName)
+  if (authorName) {
+    return (
+      <Link to={{ pathname:`/author/${authorName}`,state: {authorName : authorName } }} className="linkitem">
+        {authorName}
+      </Link>
+  );
+} else {
   return (
-    <Link to={{ pathname:`/author/${authorName}`,state: {authorName : authorName } }} className="linkitem">
-      {authorName}
-    </Link>
+    <div> Author data not available</div>
 );
+}
+
 };
 
 export default AuthorIndexItem;
