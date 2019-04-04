@@ -1,21 +1,10 @@
-// import React from 'react';
-//
-// const AuthorDetails = () => {
-//   return (
-//   <div>H</div>
-// );
-// };
-//
-// export default AuthorDetails;
-
-
 import React, { Component } from 'react';
 import LinkIndexItem from './Link_index_item';
 import './App.css';
 import './App.css';
 import axios from 'axios';
 
-// const DEFAULT_QUERY = 'all:electron';
+
 class AuthorDetails extends Component {
 
   constructor(props) {

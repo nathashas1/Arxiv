@@ -16,20 +16,3 @@ const AuthorIndex = ({ entry }) => {
 };
 
 export default AuthorIndex;
-// const links = this.state.result.map((item,index) =>
-//     {
-//       let entries = Array.from(item.feed.entry)
-//       return(
-//       entries.map((entry) =>
-//           <LinkIndexItem
-//             entry={entry}
-//             />
-//                 ))
-//     })
-//
-// const AuthorIndex = ({ entry }) => {
-//   const authors = entry.author.map((author) =>
-//   return (
-//
-// );
-// };
