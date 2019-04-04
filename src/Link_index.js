@@ -60,32 +60,35 @@ class LinkIndex extends Component {
 
 
 async componentDidMount() {
-  const api1 = 'http://export.arxiv.org/api/query?search_query=psychiatry';
-  const api2 = 'http://export.arxiv.org/api/query?search_query=therapy';
-  const api3 = 'http://export.arxiv.org/api/query?search_query=data science ';
-  const api4 = 'http://export.arxiv.org/api/query?search_query=machine learning';
+  const api1 = 'http://export.arxiv.org/api/query?search_query=psychiatry&max_results=10&sortBy=lastUpdatedDate';
+  const api2 = 'http://export.arxiv.org/api/query?search_query=therapy&max_results=10&sortBy=lastUpdatedDate';
+  const api3 = 'http://export.arxiv.org/api/query?search_query=data science&max_results=10&sortBy=lastUpdatedDate';
+  const api4 = 'http://export.arxiv.org/api/query?search_query=machine learning&max_results=10&sortBy=lastUpdatedDate';
   const allResults = []
   const result1 = await axios.get(api1);
   const result2 = await axios.get(api2);
   const result3 = await axios.get(api3);
   const result4 = await axios.get(api4);
-  
+
   let dom = new DOMParser().parseFromString(result1.data, "text/xml");
   let json = this.xmlToJson(dom)
   allResults.push(json)
-
+  console.log("in link_index",json)
   dom = new DOMParser().parseFromString(result2.data, "text/xml");
   json = this.xmlToJson(dom)
+    console.log("in link_index",json)
   allResults.push(json)
 
   dom = new DOMParser().parseFromString(result3.data, "text/xml");
   json = this.xmlToJson(dom)
+    console.log("in link_index",json)
   allResults.push(json)
 
   dom = new DOMParser().parseFromString(result4.data, "text/xml");
   json = this.xmlToJson(dom)
   allResults.push(json)
   this.setState({result: allResults})
+  console.log("in link_index",json)
   console.log("all result in json",this.state.result)
 
 }

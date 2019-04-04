@@ -61,7 +61,10 @@ class AuthorDetails extends Component {
 
 
 async componentDidMount() {
-  const api = `http://export.arxiv.org/api/query?search_query=${this.state.authorName}&sortBy=lastUpdatedDate`;
+  const authorNames = this.state.authorName.split(" ")
+  const authorLastName = authorNames.pop()
+  console.log("last name",authorLastName)
+  const api = `http://export.arxiv.org/api/query?search_query=au:${authorLastName}&max_results=10&sortBy=lastUpdatedDate`;
   const result = await axios.get(api);
 
   let dom = new DOMParser().parseFromString(result.data, "text/xml");
@@ -77,13 +80,23 @@ render() {
   const links = this.state.result.map((item,index) =>
       {
         let entries = Array.from(item.feed.entry)
+        console.log("auth",entries)
+        console.log("auth",item.feed.entry)
+        if (entries.length > 0) {
         return(
         entries.map((entry) =>
             <LinkIndexItem
               entry={entry}
               />
                   ))
+        } else {
+          return (
+          <LinkIndexItem
+            entry={item.feed.entry}
+            />
+        )}
       })
+
   return (
     <div>
     <h2 className="text">Articles of {this.state.authorName}</h2>
