@@ -61,7 +61,7 @@ class AuthorDetails extends Component {
 
 
 async componentDidMount() {
-  const api = `http://export.arxiv.org/api/query?search_query=${this.state.authorName}`;
+  const api = `http://export.arxiv.org/api/query?search_query=${this.state.authorName}&sortBy=lastUpdatedDate`;
   const result = await axios.get(api);
 
   let dom = new DOMParser().parseFromString(result.data, "text/xml");
@@ -86,7 +86,7 @@ render() {
       })
   return (
     <div>
-    <h2 className="text">Other Articles</h2>
+    <h2 className="text">Articles of {this.state.authorName}</h2>
       <ul>{links}</ul>
     </div>
   );
