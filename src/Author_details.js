@@ -64,7 +64,7 @@ async componentDidMount() {
   const authorNames = this.state.authorName.split(" ")
   const authorLastName = authorNames.pop()
   console.log("last name",authorLastName)
-  const api = `http://export.arxiv.org/api/query?search_query=au:${authorLastName}&max_results=10&sortBy=lastUpdatedDate`;
+  const api = `https://export.arxiv.org/api/query?search_query=au:${authorLastName}&max_results=10&sortBy=lastUpdatedDate`;
   const result = await axios.get(api);
 
   let dom = new DOMParser().parseFromString(result.data, "text/xml");

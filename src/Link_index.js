@@ -60,10 +60,10 @@ class LinkIndex extends Component {
 
 
 async componentDidMount() {
-  const api1 = 'http://export.arxiv.org/api/query?search_query=psychiatry&max_results=10&sortBy=lastUpdatedDate';
-  const api2 = 'http://export.arxiv.org/api/query?search_query=therapy&max_results=10&sortBy=lastUpdatedDate';
-  const api3 = 'http://export.arxiv.org/api/query?search_query=data science&max_results=10&sortBy=lastUpdatedDate';
-  const api4 = 'http://export.arxiv.org/api/query?search_query=machine learning&max_results=10&sortBy=lastUpdatedDate';
+  const api1 = 'https://export.arxiv.org/api/query?search_query=psychiatry&max_results=10&sortBy=lastUpdatedDate';
+  const api2 = 'https://export.arxiv.org/api/query?search_query=therapy&max_results=10&sortBy=lastUpdatedDate';
+  const api3 = 'https://export.arxiv.org/api/query?search_query=data science&max_results=10&sortBy=lastUpdatedDate';
+  const api4 = 'https://export.arxiv.org/api/query?search_query=machine learning&max_results=10&sortBy=lastUpdatedDate';
   const allResults = []
   const result1 = await axios.get(api1);
   const result2 = await axios.get(api2);
