@@ -96,10 +96,9 @@ async componentDidMount() {
         {
           let entries = Array.from(item.feed.entry)
           return(
-          entries.map((sub) =>
+          entries.map((entry) =>
               <LinkIndexItem
-                title={sub.title}
-                summary={sub.summary}
+                entry={entry}
                 />
                     ))
         })

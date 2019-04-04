@@ -2,11 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 
-const LinkIndexItem = ({ title,summary }) => {
-  console.log("sum in index item", summary)
+const LinkIndexItem = ({ entry }) => {
   return (
-  <Link to={{ pathname:`/link/${title}`, state: {summary : summary }  }} className="linkitem">
-    {title}
+  <Link to={{ pathname:`/link/${entry.title}`, state: {entry : entry }  }} className="linkitem">
+    {entry.title}
   </Link>
 );
 };
