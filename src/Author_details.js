@@ -77,21 +77,30 @@ async componentDidMount() {
 
   let dom = new DOMParser().parseFromString(result.data, "text/xml");
   let json = this.xmlToJson(dom)
-
-  this.setState({result: json})
-  console.log("all result in json author details",this.state.result)
+  let allResults = [json]
+  this.setState({result: allResults})
+  console.log("all result in json author details",this.state.result.feed)
 
 }
 
 
-  render() {
-
-    return (
-      <div>
-        <ul>H</ul>
-      </div>
-    );
-  }
+render() {
+  const links = this.state.result.map((item,index) =>
+      {
+        let entries = Array.from(item.feed.entry)
+        return(
+        entries.map((entry) =>
+            <LinkIndexItem
+              entry={entry}
+              />
+                  ))
+      })
+  return (
+    <div>
+      <ul>{links}</ul>
+    </div>
+  );
+}
 }
 
 

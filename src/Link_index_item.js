@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 
 const LinkIndexItem = ({ entry }) => {
+  console.log("in item chcek", entry)
   return (
   <Link to={{ pathname:`/link/${entry.title}`, state: {entry : entry }  }} className="linkitem">
     {entry.title}
