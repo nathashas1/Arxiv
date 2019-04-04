@@ -58,38 +58,115 @@ class LinkIndex extends Component {
     return obj;
   }
 
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
 
 async componentDidMount() {
-  const api1 = 'https://export.arxiv.org/api/query?search_query=psychiatry&max_results=10&sortBy=lastUpdatedDate';
-  const api2 = 'https://export.arxiv.org/api/query?search_query=therapy&max_results=10&sortBy=lastUpdatedDate';
-  const api3 = 'https://export.arxiv.org/api/query?search_query=data science&max_results=10&sortBy=lastUpdatedDate';
-  const api4 = 'https://export.arxiv.org/api/query?search_query=machine learning&max_results=10&sortBy=lastUpdatedDate';
+  // const api1 = 'https://export.arxiv.org/api/query?search_query=psychiatry&max_results=10&sortBy=lastUpdatedDate';
+  // const api2 = 'https://export.arxiv.org/api/query?search_query=therapy&max_results=10&sortBy=lastUpdatedDate';
+  // const api3 = 'https://export.arxiv.org/api/query?search_query=data science&max_results=10&sortBy=lastUpdatedDate';
+  // const api4 = 'https://export.arxiv.org/api/query?search_query=machine learning&max_results=10&sortBy=lastUpdatedDate';
   const allResults = []
-  const result1 = await axios.get(api1);
-  const result2 = await axios.get(api2);
-  const result3 = await axios.get(api3);
-  const result4 = await axios.get(api4);
+  // const result1 = await axios.get(api1);
+  // const result2 = await axios.get(api2);
+  // const result3 = await axios.get(api3);
+  // const result4 = await axios.get(api4);
 
-  let dom = new DOMParser().parseFromString(result1.data, "text/xml");
-  let json = this.xmlToJson(dom)
-  allResults.push(json)
-  console.log("in link_index",json)
-  dom = new DOMParser().parseFromString(result2.data, "text/xml");
-  json = this.xmlToJson(dom)
-    console.log("in link_index",json)
-  allResults.push(json)
+  for (let i = 0; i < 2000; i++) {
+    const api1 = `https://export.arxiv.org/api/query?search_query=psychiatry&start=${i}&max_results=10&sortBy=lastUpdatedDate`;
+    const result1 = await axios.get(api1);
+    i += 10
+    let dom = new DOMParser().parseFromString(result1.data, "text/xml");
+    let json = this.xmlToJson(dom)
+    console.log("json",json.feed.entry)
 
-  dom = new DOMParser().parseFromString(result3.data, "text/xml");
-  json = this.xmlToJson(dom)
-    console.log("in link_index",json)
-  allResults.push(json)
+    if (json.feed.entry !== undefined){
+    allResults.push(json)
+    this.setState({result: allResults})
+  } else {
+    break
+  }
+    await this.sleep(3000);
+  }
 
-  dom = new DOMParser().parseFromString(result4.data, "text/xml");
-  json = this.xmlToJson(dom)
-  allResults.push(json)
-  this.setState({result: allResults})
-  console.log("in link_index",json)
-  console.log("all result in json",this.state.result)
+  for (let i = 0; i < 2000; i++) {
+    const api2 = `https://export.arxiv.org/api/query?search_query=therapy&start=${i}&max_results=10&sortBy=lastUpdatedDate`;
+    const result2 = await axios.get(api2);
+    i += 10
+    let dom = new DOMParser().parseFromString(result2.data, "text/xml");
+    let json = this.xmlToJson(dom)
+    console.log("json",json.feed.entry)
+
+    if (json.feed.entry !== undefined){
+    allResults.push(json)
+    this.setState({result: allResults})
+  } else {
+    break
+  }
+    await this.sleep(3000);
+  }
+
+  for (let i = 0; i < 2000; i++) {
+    const api3 = `https://export.arxiv.org/api/query?search_query=data science&start=${i}&max_results=10&sortBy=lastUpdatedDate`;
+    const result3 = await axios.get(api3);
+    i += 10
+    let dom = new DOMParser().parseFromString(result3.data, "text/xml");
+    let json = this.xmlToJson(dom)
+    console.log("json",json.feed.entry)
+
+    if (json.feed.entry !== undefined){
+    allResults.push(json)
+    this.setState({result: allResults})
+  } else {
+    break
+  }
+    await this.sleep(3000);
+  }
+
+  for (let i = 0; i < 2000; i++) {
+    const api4 = `https://export.arxiv.org/api/query?search_query=machine learning&start=${i}&max_results=10&sortBy=lastUpdatedDate`;
+    const result4 = await axios.get(api4);
+    i += 10
+    let dom = new DOMParser().parseFromString(result4.data, "text/xml");
+    let json = this.xmlToJson(dom)
+    console.log("json",json.feed.entry)
+
+    if (json.feed.entry !== undefined){
+      allResults.push(json)
+    this.setState({result: allResults})
+  } else {
+    break
+  }
+    await this.sleep(3000);
+  }
+
+
+
+
+
+
+
+
+
+  // let dom = new DOMParser().parseFromString(result1.data, "text/xml");
+  // let json = this.xmlToJson(dom)
+  // console.log("json",json.feed)
+  // allResults.push(json)
+  //
+  // dom = new DOMParser().parseFromString(result2.data, "text/xml");
+  // json = this.xmlToJson(dom)
+  // allResults.push(json)
+  //
+  // dom = new DOMParser().parseFromString(result3.data, "text/xml");
+  // json = this.xmlToJson(dom)
+  // allResults.push(json)
+  //
+  // dom = new DOMParser().parseFromString(result4.data, "text/xml");
+  // json = this.xmlToJson(dom)
+  // allResults.push(json)
+  // this.setState({result: allResults})
 
 }
 
