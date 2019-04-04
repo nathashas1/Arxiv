@@ -1,10 +1,18 @@
 import React from 'react';
 
 
-const App = () => (
+const LinkDetails = (props) => {
+  if (props.location.state){
+  return (
   <div>
-    Jello
+    {props.location.state.summary}
   </div>
-);
+)
+} else {
+  return(
+  <div>Not Available</div>
+)}
 
-export default App;
+};
+
+export default LinkDetails;

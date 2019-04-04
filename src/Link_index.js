@@ -98,13 +98,15 @@ async componentDidMount() {
           return(
           entries.map((sub) =>
               <LinkIndexItem
-                title={sub.title} />
+                title={sub.title}
+                summary={sub.summary}
+                />
                     ))
         })
     return (
-      <ul>
-        {links}
-      </ul>
+      <div>
+        <ul>{links}</ul>
+      </div>
     );
   }
 }
