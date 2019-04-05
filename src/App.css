@@ -27,8 +27,7 @@
 .summary{
   display: flex;
   flex-direction: column;
-  padding: 5px;
-  padding-left: 10px;
+  padding: 20px;
 }
 
 .text{

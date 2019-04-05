@@ -152,19 +152,19 @@ if (json.feed.entry !== undefined && this.mounted){
 totalResults = json.feed["opensearch:totalResults"]
 if (totalResults > 30000) totalResults = 30000
 if (totalResults > 100){
- for (let i = 50; i < totalResults && this.state.load; i++) {
-     api = `https://export.arxiv.org/api/query?search_query=machine learning&start=${i}&max_results=50&sortBy=lastUpdatedDate`;
-     result = await axios.get(api);
-     i += 50
-     let dom = new DOMParser().parseFromString(result.data, "text/xml");
-     let json = this.xmlToJson(dom)
-     if (json.feed.entry !== undefined && this.mounted){
-       allResults.push(json)
-       this.setState({result: allResults})
-      }
-     await this.sleep(3000);
- }
-}
+   for (let i = 50; i < totalResults && this.state.load; i++) {
+       api = `https://export.arxiv.org/api/query?search_query=machine learning&start=${i}&max_results=50&sortBy=lastUpdatedDate`;
+       result = await axios.get(api);
+       i += 50
+       let dom = new DOMParser().parseFromString(result.data, "text/xml");
+       let json = this.xmlToJson(dom)
+       if (json.feed.entry !== undefined && this.mounted){
+         allResults.push(json)
+         this.setState({result: allResults})
+        }
+       await this.sleep(3000);
+    }
+  }
 }
 
 componentWillUnmount(){
@@ -178,12 +178,12 @@ componentWillUnmount(){
         {
           let entries = Array.from(item.feed.entry)
           return(
-          entries.map((entry) =>
-              <LinkIndexItem
-                key={entry.id}
-                entry={entry}
-                />
-                    ))
+            entries.map((entry) =>
+                <LinkIndexItem
+                  key={entry.id}
+                  entry={entry}
+                  />
+          ))
         })
     return (
       <div>

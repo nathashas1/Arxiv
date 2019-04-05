@@ -6,20 +6,19 @@ const AuthorIndex = ({ entry }) => {
   let lastId = 0;
   const allAuthors = authors.map(author => {
      return (
-       <AuthorIndexItem
-         authorName={author.name}
-         key={lastId++}/>
+         <AuthorIndexItem
+           authorName={author.name}
+           key={lastId++}/>
      );
    });
-   const author = <AuthorIndexItem
-     authorName={entry.author.name}
-     key={lastId++}/>
-  return (
-    <div className='list'>
-        {authors.length ? <div>{allAuthors}</div> : <div>{author}</div>}
-    </div>
-
-);
-};
+  const author = <AuthorIndexItem
+                  authorName={entry.author.name}
+                  key={lastId++}/>
+    return (
+        <div className='list'>
+            {authors.length ? <div>{allAuthors}</div> : <div>{author}</div>}
+        </div>
+    );
+  };
 
 export default AuthorIndex;

@@ -11,7 +11,8 @@ class AuthorDetails extends Component {
     super(props);
     this.state = {
       result: [],
-      authorName: props.match.params.authorName
+      authorName: props.match.params.authorName,
+      validName: true,
     };
   }
 
@@ -61,76 +62,81 @@ class AuthorDetails extends Component {
   }
 
 
-async componentDidMount() {
-  this.mounted = true;
-  const authorNames = this.state.authorName.split(" ")
-  let authorLastName = authorNames.pop()
-  authorLastName = authorLastName.replace(/[^a-zA-Z0-9]/g, '');
-  console.log("authorLastName",authorLastName)
-  let allResults = []
-
-  let api = `https://export.arxiv.org/api/query?search_query=au:${this.state.authorName}&start=0&max_results=10&sortBy=lastUpdatedDate`
-  let result = await axios.get(api);
-  let dom = new DOMParser().parseFromString(result.data, "text/xml");
-  let json = this.xmlToJson(dom)
-    console.log("json",json)
-  if (json.feed.entry !== undefined && this.mounted){
-    allResults.push(json)
-    this.setState({result: allResults})
-  }
-  let totalResults = json.feed["opensearch:totalResults"]
-  if (totalResults > 30000) totalResults = 30000
-  if (totalResults > 10){
-  for (let i = 10; i < totalResults && this.state.load; i++) {
-    api = `https://export.arxiv.org/api/query?search_query=au:${authorLastName}&start=${i}&max_results=10&sortBy=lastUpdatedDate`;
-    result = await axios.get(api);
-    i += 10
+  async componentDidMount() {
+    this.mounted = true;
+    let allResults = []
+    let authorNames = this.state.authorName.split(" ")
+    let authorLastName = authorNames.pop()
+    if (!(/^[a-zA-Z]+$/.test(authorLastName))) {
+      this.setState({validName: false})
+    }
+    let api = `https://export.arxiv.org/api/query?search_query=au:${authorLastName}&start=0&max_results=10&sortBy=lastUpdatedDate`
+    let result = await axios.get(api);
     let dom = new DOMParser().parseFromString(result.data, "text/xml");
     let json = this.xmlToJson(dom)
-    console.log("json",json)
     if (json.feed.entry !== undefined && this.mounted){
       allResults.push(json)
       this.setState({result: allResults})
     }
-    await this.sleep(3000);
+    let totalResults = json.feed["opensearch:totalResults"]
+    if (totalResults > 30000) totalResults = 30000
+    if (totalResults > 10){
+      for (let i = 10; i < totalResults && this.state.load; i++) {
+        api = `https://export.arxiv.org/api/query?search_query=au:${authorLastName}&start=${i}&max_results=10&sortBy=lastUpdatedDate`;
+        result = await axios.get(api);
+        i += 10
+        let dom = new DOMParser().parseFromString(result.data, "text/xml");
+        let json = this.xmlToJson(dom)
+        if (json.feed.entry !== undefined && this.mounted){
+          allResults.push(json)
+          this.setState({result: allResults})
+        }
+        await this.sleep(3000);
+      }
+    }
   }
-}
-}
 
-componentWillUnmount(){
-  this.mounted = false;
-}
+  componentWillUnmount(){
+    this.mounted = false;
+  }
 
 
 
-render() {
-  const links = this.state.result.map((item,index) =>
-      {
-        let entries = Array.from(item.feed.entry)
-        if (entries.length > 0) {
-        return(
-        entries.map((entry) =>
-            <LinkIndexItem
-              entry={entry}
-              key={entry.id}
-              />
-                  ))
+  render() {
+    const links = this.state.result.map((item,index) =>
+        {
+          let entries = Array.from(item.feed.entry)
+          if (entries.length > 0) {
+            return(
+              entries.map((entry) =>
+                  <LinkIndexItem
+                    entry={entry}
+                    key={entry.id}
+                    />
+            ))
+          } else {
+            return (
+              <LinkIndexItem
+                entry={item.feed.entry}
+                key={item.feed.entry.id}
+                />
+            )}
+        })
+      if(this.state.validName) {
+          return (
+            <div>
+              <h2 className="text">Articles of {this.state.authorName}</h2>
+              <ul>{links}</ul>
+            </div>
+          );
         } else {
           return (
-          <LinkIndexItem
-            entry={item.feed.entry}
-            key={item.feed.entry.id}
-            />
-        )}
-      })
-console.log("author",this.state.result)
-  return (
-    <div>
-    <h2 className="text">Articles of {this.state.authorName}</h2>
-      <ul>{links}</ul>
-    </div>
-  );
-}
+            <h4 className="text">
+              Name may contain special character
+            </h4>
+          );
+      }
+    }
 }
 
 

@@ -7,7 +7,7 @@ const LinkIndexItem = ({ entry }) => {
   <Link to={{ pathname:`/link/${entry.title}`, state: {entry : entry }  }} className="linkitem">
     {entry.title}
   </Link>
-);
+  );
 };
 
 export default LinkIndexItem;
