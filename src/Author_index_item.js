@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 
 
 const AuthorIndexItem = ({authorName}) => {
-  console.log("in author index item",authorName)
   if (authorName) {
     return (
       <Link to={{ pathname:`/author/${authorName}`,state: {authorName : authorName } }} className="linkitem">

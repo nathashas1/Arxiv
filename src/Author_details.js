@@ -9,11 +9,8 @@ class AuthorDetails extends Component {
 
   constructor(props) {
     super(props);
-    console.log("props",props.match.params.authorName)
     this.state = {
       result: [],
-      isLoading: false,
-      error: null,
       authorName: props.match.params.authorName
     };
   }
@@ -65,59 +62,68 @@ class AuthorDetails extends Component {
 
 
 async componentDidMount() {
+  this.mounted = true;
   const authorNames = this.state.authorName.split(" ")
-  const authorLastName = authorNames.pop()
+  let authorLastName = authorNames.pop()
+  authorLastName = authorLastName.replace(/[^a-zA-Z0-9]/g, '');
+  console.log("authorLastName",authorLastName)
   let allResults = []
 
-  for (let i = 0; i < 2000; i++) {
-    const api = `https://export.arxiv.org/api/query?search_query=au:${authorLastName}&start=${i}&max_results=10&sortBy=lastUpdatedDate`;
-    const result = await axios.get(api);
+  let api = `https://export.arxiv.org/api/query?search_query=au:${this.state.authorName}&start=0&max_results=10&sortBy=lastUpdatedDate`
+  let result = await axios.get(api);
+  let dom = new DOMParser().parseFromString(result.data, "text/xml");
+  let json = this.xmlToJson(dom)
+    console.log("json",json)
+  if (json.feed.entry !== undefined && this.mounted){
+    allResults.push(json)
+    this.setState({result: allResults})
+  }
+  let totalResults = json.feed["opensearch:totalResults"]
+  if (totalResults > 30000) totalResults = 30000
+  if (totalResults > 10){
+  for (let i = 10; i < totalResults && this.state.load; i++) {
+    api = `https://export.arxiv.org/api/query?search_query=au:${authorLastName}&start=${i}&max_results=10&sortBy=lastUpdatedDate`;
+    result = await axios.get(api);
     i += 10
     let dom = new DOMParser().parseFromString(result.data, "text/xml");
     let json = this.xmlToJson(dom)
-    if (json.feed.entry !== undefined){
-    allResults.push(json)
-    this.setState({result: allResults})
-  } else {
-    break
-  }
+    console.log("json",json)
+    if (json.feed.entry !== undefined && this.mounted){
+      allResults.push(json)
+      this.setState({result: allResults})
+    }
     await this.sleep(3000);
   }
-
-
-  // const api = `https://export.arxiv.org/api/query?search_query=au:${authorLastName}&max_results=10&sortBy=lastUpdatedDate`;
-  // const result = await axios.get(api);
-  //
-  // let dom = new DOMParser().parseFromString(result.data, "text/xml");
-  // let json = this.xmlToJson(dom)
-  // let allResults = [json]
-  // this.setState({result: allResults})
-  // console.log("all result in json author details",this.state.result.feed)
-
 }
+}
+
+componentWillUnmount(){
+  this.mounted = false;
+}
+
 
 
 render() {
   const links = this.state.result.map((item,index) =>
       {
         let entries = Array.from(item.feed.entry)
-        console.log("auth",entries)
-        console.log("auth",item.feed.entry)
         if (entries.length > 0) {
         return(
         entries.map((entry) =>
             <LinkIndexItem
               entry={entry}
+              key={entry.id}
               />
                   ))
         } else {
           return (
           <LinkIndexItem
             entry={item.feed.entry}
+            key={item.feed.entry.id}
             />
         )}
       })
-
+console.log("author",this.state.result)
   return (
     <div>
     <h2 className="text">Articles of {this.state.authorName}</h2>

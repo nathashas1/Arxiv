@@ -13,7 +13,7 @@ class LinkIndex extends Component {
     this.state = {
       result: [],
       isLoading: false,
-      error: null,
+      error: null
     };
   }
 
@@ -64,31 +64,29 @@ class LinkIndex extends Component {
 
 
 async componentDidMount() {
-  // const api1 = 'https://export.arxiv.org/api/query?search_query=psychiatry&max_results=10&sortBy=lastUpdatedDate';
-  // const api2 = 'https://export.arxiv.org/api/query?search_query=therapy&max_results=10&sortBy=lastUpdatedDate';
-  // const api3 = 'https://export.arxiv.org/api/query?search_query=data science&max_results=10&sortBy=lastUpdatedDate';
-  // const api4 = 'https://export.arxiv.org/api/query?search_query=machine learning&max_results=10&sortBy=lastUpdatedDate';
+  this.mounted = true;
   const allResults = []
-  // const result1 = await axios.get(api1);
-  // const result2 = await axios.get(api2);
-  // const result3 = await axios.get(api3);
-  // const result4 = await axios.get(api4);
   let api = `https://export.arxiv.org/api/query?search_query=psychiatry&start=0&max_results=20&sortBy=lastUpdatedDate`;
   let result = await axios.get(api);
   let dom = new DOMParser().parseFromString(result.data, "text/xml");
   let json = this.xmlToJson(dom)
+  if (json.feed.entry !== undefined && this.mounted){
+    allResults.push(json)
+    this.setState({result: allResults})
+  }
   let totalResults = json.feed["opensearch:totalResults"]
   if (totalResults > 30000) totalResults = 30000
   if (totalResults > 20){
-  for (let i = 10; i < totalResults; i++) {
+  for (let i = 20; i < totalResults; i++) {
     api = `https://export.arxiv.org/api/query?search_query=psychiatry&start=${i}&max_results=20&sortBy=lastUpdatedDate`;
     result = await axios.get(api);
-    i += 10
+    i += 20
     let dom = new DOMParser().parseFromString(result.data, "text/xml");
     let json = this.xmlToJson(dom)
-    console.log("json",json.feed["opensearch:totalResults"])
-    allResults.push(json)
-    this.setState({result: allResults})
+    if (json.feed.entry !== undefined && this.mounted){
+      allResults.push(json)
+      this.setState({result: allResults})
+    }
     await this.sleep(3000);
   }
 }
@@ -97,23 +95,23 @@ async componentDidMount() {
  result = await axios.get(api);
  dom = new DOMParser().parseFromString(result.data, "text/xml");
  json = this.xmlToJson(dom)
+ if (json.feed.entry !== undefined && this.mounted){
+   allResults.push(json)
+   this.setState({result: allResults})
+ }
  totalResults = json.feed["opensearch:totalResults"]
  if (totalResults > 30000) totalResults = 30000
 if (totalResults > 100){
-  for (let i = 10; i < totalResults; i++) {
-    api = `https://export.arxiv.org/api/query?search_query=therapy&start=${i}&max_results=100&sortBy=lastUpdatedDate`;
+  for (let i = 50; i < totalResults; i++) {
+    api = `https://export.arxiv.org/api/query?search_query=therapy&start=${i}&max_results=50&sortBy=lastUpdatedDate`;
     result = await axios.get(api);
-    i += 10
+    i += 50
     let dom = new DOMParser().parseFromString(result.data, "text/xml");
     let json = this.xmlToJson(dom)
-    console.log("json",json)
-    console.log("json",json.feed["opensearch:totalResults"])
-    // if (json.feed.entry !== undefined){
-    allResults.push(json)
-    this.setState({result: allResults})
-  // } else {
-  //   break
-  // }
+    if (json.feed.entry !== undefined && this.mounted){
+      allResults.push(json)
+      this.setState({result: allResults})
+    }
     await this.sleep(3000);
   }
 }
@@ -122,114 +120,57 @@ api = `https://export.arxiv.org/api/query?search_query=data science&start=0&max_
 result = await axios.get(api);
 dom = new DOMParser().parseFromString(result.data, "text/xml");
 json = this.xmlToJson(dom)
+if (json.feed.entry !== undefined && this.mounted){
+  allResults.push(json)
+  this.setState({result: allResults})
+}
 totalResults = json.feed["opensearch:totalResults"]
 if (totalResults > 30000) totalResults = 30000
 if (totalResults > 100){
- for (let i = 10; i < totalResults; i++) {
-   api = `https://export.arxiv.org/api/query?search_query=data science&start=${i}&max_results=100&sortBy=lastUpdatedDate`;
+ for (let i = 50; i < totalResults; i++) {
+   api = `https://export.arxiv.org/api/query?search_query=data science&start=${i}&max_results=50&sortBy=lastUpdatedDate`;
    result = await axios.get(api);
-   i += 10
+   i += 50
    let dom = new DOMParser().parseFromString(result.data, "text/xml");
    let json = this.xmlToJson(dom)
-   console.log("json",json)
-   console.log("json",json.feed["opensearch:totalResults"])
-   // if (json.feed.entry !== undefined){
-   allResults.push(json)
-   this.setState({result: allResults})
- // } else {
- //   break
- // }
+   if (json.feed.entry !== undefined && this.mounted){
+     allResults.push(json)
+     this.setState({result: allResults})
+    }
    await this.sleep(3000);
  }
 }
 
-api = `https://export.arxiv.org/api/query?search_query=machine learning&start=0&max_results=100&sortBy=lastUpdatedDate`;
+api = `https://export.arxiv.org/api/query?search_query=machine learning&start=0&max_results=50&sortBy=lastUpdatedDate`;
 result = await axios.get(api);
 dom = new DOMParser().parseFromString(result.data, "text/xml");
 json = this.xmlToJson(dom)
+if (json.feed.entry !== undefined && this.mounted){
+  allResults.push(json)
+  this.setState({result: allResults})
+}
 totalResults = json.feed["opensearch:totalResults"]
 if (totalResults > 30000) totalResults = 30000
 if (totalResults > 100){
- for (let i = 10; i < totalResults; i++) {
-   api = `https://export.arxiv.org/api/query?search_query=machine learning&start=${i}&max_results=100&sortBy=lastUpdatedDate`;
-   result = await axios.get(api);
-   i += 10
-   let dom = new DOMParser().parseFromString(result.data, "text/xml");
-   let json = this.xmlToJson(dom)
-   console.log("json",json)
-   console.log("json",json.feed["opensearch:totalResults"])
-   // if (json.feed.entry !== undefined){
-   allResults.push(json)
-   this.setState({result: allResults})
- // } else {
- //   break
- // }
-   await this.sleep(3000);
+ for (let i = 50; i < totalResults && this.state.load; i++) {
+     api = `https://export.arxiv.org/api/query?search_query=machine learning&start=${i}&max_results=50&sortBy=lastUpdatedDate`;
+     result = await axios.get(api);
+     i += 50
+     let dom = new DOMParser().parseFromString(result.data, "text/xml");
+     let json = this.xmlToJson(dom)
+     if (json.feed.entry !== undefined && this.mounted){
+       allResults.push(json)
+       this.setState({result: allResults})
+      }
+     await this.sleep(3000);
  }
 }
-
-
-  // for (let i = 0; i < 2000; i++) {
-  //   const api3 = `https://export.arxiv.org/api/query?search_query=data science&start=${i}&max_results=10&sortBy=lastUpdatedDate`;
-  //   const result3 = await axios.get(api3);
-  //   i += 10
-  //   let dom = new DOMParser().parseFromString(result3.data, "text/xml");
-  //   let json = this.xmlToJson(dom)
-  //   console.log("json",json)
-  //
-  //   if (json.feed.entry !== undefined){
-  //   allResults.push(json)
-  //   this.setState({result: allResults})
-  // } else {
-  //   break
-  // }
-  //   await this.sleep(3000);
-  // }
-
-  // for (let i = 0; i < 2000; i++) {
-  //   const api4 = `https://export.arxiv.org/api/query?search_query=machine learning&start=${i}&max_results=10&sortBy=lastUpdatedDate`;
-  //   const result4 = await axios.get(api4);
-  //   i += 10
-  //   let dom = new DOMParser().parseFromString(result4.data, "text/xml");
-  //   let json = this.xmlToJson(dom)
-  //   console.log("json",json)
-  //
-  //   if (json.feed.entry !== undefined){
-  //     allResults.push(json)
-  //   this.setState({result: allResults})
-  // } else {
-  //   break
-  // }
-  //   await this.sleep(3000);
-  // }
-
-
-
-
-
-
-
-
-
-  // let dom = new DOMParser().parseFromString(result1.data, "text/xml");
-  // let json = this.xmlToJson(dom)
-  // console.log("json",json.feed)
-  // allResults.push(json)
-  //
-  // dom = new DOMParser().parseFromString(result2.data, "text/xml");
-  // json = this.xmlToJson(dom)
-  // allResults.push(json)
-  //
-  // dom = new DOMParser().parseFromString(result3.data, "text/xml");
-  // json = this.xmlToJson(dom)
-  // allResults.push(json)
-  //
-  // dom = new DOMParser().parseFromString(result4.data, "text/xml");
-  // json = this.xmlToJson(dom)
-  // allResults.push(json)
-  // this.setState({result: allResults})
-
 }
+
+componentWillUnmount(){
+  this.mounted = false;
+}
+
 
 
   render() {

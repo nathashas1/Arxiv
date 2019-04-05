@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import AuthorIndex from './Author_index';
 
 const LinkDetails = (props) => {
