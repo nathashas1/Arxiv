@@ -4,9 +4,7 @@ import './App.css';
 import './App.css';
 import axios from 'axios';
 
-// const DEFAULT_QUERY = 'all:electron';
 class LinkIndex extends Component {
-
   constructor(props) {
     super(props);
 
@@ -17,7 +15,8 @@ class LinkIndex extends Component {
     };
   }
 
-//https://gist.github.com/demircancelebi/f0a9c7e1f48be4ea91ca7ad81134459d
+//Source: https://gist.github.com/demircancelebi/f0a9c7e1f48be4ea91ca7ad81134459d
+// Convert XML to json
   xmlToJson(xml) {
     // Create the return object
     let obj = {};
@@ -62,7 +61,7 @@ class LinkIndex extends Component {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-
+//Fetch relevant data as the page loads.There is a wait time between fetches.
 async componentDidMount() {
   this.mounted = true;
   const allResults = []
@@ -167,6 +166,7 @@ if (totalResults > 100){
   }
 }
 
+//Stop Api calls when component unmounts
 componentWillUnmount(){
   this.mounted = false;
 }

@@ -16,7 +16,8 @@ class AuthorDetails extends Component {
     };
   }
 
-//https://gist.github.com/demircancelebi/f0a9c7e1f48be4ea91ca7ad81134459d
+  //Source: https://gist.github.com/demircancelebi/f0a9c7e1f48be4ea91ca7ad81134459d
+  // Convert XML to json
   xmlToJson(xml) {
     // Create the return object
     let obj = {};
@@ -61,7 +62,7 @@ class AuthorDetails extends Component {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-
+  //Fetch articles of the particular author.Names with special characters are not supported by the api.
   async componentDidMount() {
     this.mounted = true;
     let allResults = []
@@ -96,6 +97,7 @@ class AuthorDetails extends Component {
     }
   }
 
+  //Stop Api calls when component unmounts
   componentWillUnmount(){
     this.mounted = false;
   }
