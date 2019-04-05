@@ -6,11 +6,11 @@ import axios from 'axios';
 
 
 class AuthorDetails extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
       result: [],
+      filterResult: [],
       authorName: props.match.params.authorName,
       validName: true,
     };
@@ -62,14 +62,52 @@ class AuthorDetails extends Component {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  //Fetch articles of the particular author.Names with special characters are not supported by the api.
+//Filter Results so that it displays only last 30 days of data.
+  filterResults(array){
+    let filteredArray = []
+    let allValues = []
+    let dateFrom;
+    let dateTo;
+    if (array[0].feed.entry.length > 1) {
+       dateFrom = new Date(array[0].feed.entry[0].published)
+       dateTo = new Date(array[0].feed.entry[0].published)
+    } else {
+       dateFrom = new Date(array[0].feed.entry.published)
+       dateTo = new Date(array[0].feed.entry.published)
+    }
+    dateTo.setDate(dateTo.getDate()-30)
+    dateTo = new Date(dateTo)
+    allValues.push(array[0].feed.entry)
+    if (allValues[0].length > 1) {
+      for (let i = 0; i < allValues[0].length; i++) {
+        let checkDate = new Date(allValues[0][i].published)
+        if(checkDate <= dateFrom && checkDate >= dateTo) {
+            filteredArray.push(allValues[0][i])
+        }
+      }
+    } else {
+      for (let i = 0; i < allValues.length; i++) {
+        let checkDate = new Date(allValues[0].published)
+        if(checkDate <= dateFrom && checkDate >= dateTo) {
+            filteredArray.push(allValues[i])
+        }
+      }
+    }
+    this.setState({filterResult: filteredArray})
+  }
+
+  //Fetch articles of the particular author.
   async componentDidMount() {
     this.mounted = true;
     let allResults = []
     let authorNames = this.state.authorName.split(" ")
     let authorLastName = authorNames.pop()
+    //Names with special characters are not supported by the api.So they are eliminated
     if (!(/^[a-zA-Z]+$/.test(authorLastName))) {
-      this.setState({validName: false})
+      authorLastName = authorNames[0]
+      if (!(/^[a-zA-Z]+$/.test(authorLastName))) {
+        this.setState({validName: false})
+      }
     }
     let api = `https://export.arxiv.org/api/query?search_query=au:${authorLastName}&start=0&max_results=10&sortBy=lastUpdatedDate`
     let result = await axios.get(api);
@@ -77,7 +115,6 @@ class AuthorDetails extends Component {
     let json = this.xmlToJson(dom)
     if (json.feed.entry !== undefined && this.mounted){
       allResults.push(json)
-      this.setState({result: allResults})
     }
     let totalResults = json.feed["opensearch:totalResults"]
     if (totalResults > 30000) totalResults = 30000
@@ -90,11 +127,11 @@ class AuthorDetails extends Component {
         let json = this.xmlToJson(dom)
         if (json.feed.entry !== undefined && this.mounted){
           allResults.push(json)
-          this.setState({result: allResults})
         }
         await this.sleep(3000);
       }
     }
+    if (allResults.length > 0) this.filterResults(allResults)
   }
 
   //Stop Api calls when component unmounts
@@ -105,40 +142,24 @@ class AuthorDetails extends Component {
 
 
   render() {
-    const links = this.state.result.map((item,index) =>
-        {
-          let entries = Array.from(item.feed.entry)
-          if (entries.length > 0) {
-            return(
-              entries.map((entry) =>
-                  <LinkIndexItem
-                    entry={entry}
-                    key={entry.id}
-                    />
-            ))
-          } else {
-            return (
-              <LinkIndexItem
-                entry={item.feed.entry}
-                key={item.feed.entry.id}
-                />
-            )}
-        })
-      if(this.state.validName) {
-          return (
+        let authorlinks;
+        if (this.state.validName) {
+          authorlinks = this.state.filterResult.map(item => {
+           return (
+             <LinkIndexItem
+               key={item.id}
+               entry={item} />
+           );
+        }); } else {
+           authorlinks = <h4>Special Character names are not supported.</h4>
+        }
+        return (
             <div>
               <h2 className="text">Articles of {this.state.authorName}</h2>
-              <ul>{links}</ul>
+              <ul>{authorlinks}</ul>
             </div>
-          );
-        } else {
-          return (
-            <h4 className="text">
-              Name may contain special character
-            </h4>
-          );
-      }
-    }
+        );
+  }
 }
 
 
